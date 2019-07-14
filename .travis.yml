@@ -12,7 +12,7 @@ install:
   - cd .. && git clone https://github.com/thu-coai/cotk.git && pip install ./cotk --progress-bar off && cd seq2seq-tensorflow
 
 script:
-  - pytest test_seq2seq_pytensorflow.py --cov=. --cov-report term-missing
+  - pytest test_seq2seq_tensorflow.py --cov=. --cov-report term-missing
 
 deploy:
   - provider: script
