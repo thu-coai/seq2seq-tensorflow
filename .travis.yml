@@ -2,30 +2,19 @@ language: python
 
 python:
   - 3.6
-  - 3.5
 
 cache: pip
 
 install:
   - pip install --upgrade pip
-  - pip install -e .[develop] --progress-bar off
-  - pip install sphinx==1.8.5
-  - pip install m2r
+  - pip install -r requirements.txt
+  - pip install pytest-dependency pytest-mock requests-mock pytest>=3.6.0 pytest-cov==2.4.0 python-coveralls
+  - cd .. && git clone https://github.com/thu-coai/cotk.git && pip install ./cotk --progress-bar off && cd seq2seq-tensorflow
 
 script:
-  - python setup.py test
-  - cd docs && make html && mv ./build/html ./build/docs && rm -r ./build/doctrees && cd ..
+  - pytest test_seq2seq_pytensorflow.py --cov=. --cov-report term-missing
 
 deploy:
-  - provider: pages
-    skip-cleanup: true
-    github-token: $DEPLOY_KEY
-    keep-history: true
-    repo: thu-coai/cotk_docs
-    target-branch: master
-    local-dir: ./docs/build
-    on:
-      branch: master
   - provider: script
     skip-cleanup: true
     script: coveralls
