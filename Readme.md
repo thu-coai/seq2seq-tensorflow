@@ -3,8 +3,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/thu-coai/seq2seq-tensorflow/badge.svg?branch=master)](https://coveralls.io/github/thu-coai/seq2seq-tensorflow?branch=master)
 [![Build Status](https://travis-ci.com/thu-coai/seq2seq-tensorflow.svg?branch=master)](https://travis-ci.com/thu-coai/seq2seq-tensorflow)
 
-This is a model from cotk, click here to our [main repo](https://github.com/thu-coai/cotk).
-
 ## Seq2Seq (TensorFlow)
 
 Seq2seq is a basic model for single turn dialog. Here, we implement seq2seq with attention mechanism. You can refer to the following papers for details:
