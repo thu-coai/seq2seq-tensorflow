@@ -34,7 +34,7 @@ class Seq2SeqModel(object):
 		# build the embedding table and embedding input
 		if embed is None:
 			# initialize the embedding randomly
-			self.embed = tf.get_variable('embed', [data.vocab_size, args.embedding_size], tf.float32)
+			self.embed = tf.get_variable('embed', [data.frequent_vocab_size, args.embedding_size], tf.float32)
 		else:
 			# initialize the embedding by pre-trained word vectors
 			self.embed = tf.get_variable('embed', dtype=tf.float32, initializer=embed)
@@ -52,8 +52,8 @@ class Seq2SeqModel(object):
 				self.posts_length, dtype=tf.float32, scope="encoder_rnn")
 
 		# get output projection function
-		output_fn = MyDense(data.vocab_size, use_bias = True)
-		sampled_sequence_loss = output_projection_layer(args.dh_size, data.vocab_size, args.softmax_samples)
+		output_fn = MyDense(data.frequent_vocab_size, use_bias = True)
+		sampled_sequence_loss = output_projection_layer(args.dh_size, data.frequent_vocab_size, args.softmax_samples)
 
 		# construct helper and attention
 		train_helper = tf.contrib.seq2seq.TrainingHelper(self.decoder_input, self.responses_length)
@@ -79,7 +79,7 @@ class Seq2SeqModel(object):
 																 maximum_iterations=args.max_sent_length, scope = "decoder_rnn")
 			self.decoder_distribution = infer_outputs.rnn_output
 			self.generation_index = tf.argmax(tf.split(self.decoder_distribution,
-				[2, data.vocab_size-2], 2)[1], 2) + 2 # for removing UNK
+				[2, data.frequent_vocab_size-2], 2)[1], 2) + 2 # for removing UNK
 
 		# calculate the gradient of parameters and update
 		self.params = [k for k in tf.trainable_variables() if args.name in k.name]
@@ -220,7 +220,7 @@ class Seq2SeqModel(object):
 				else:
 					result_id = response_id_list
 				for token in response_token:
-					if token != data.ext_vocab[data.eos_id]:
+					if token != data.get_special_tokens_mapping()['eos']:
 						result_token.append(token)
 					else:
 						break
